@@ -3,8 +3,8 @@ use std::convert::TryInto;
 use sdl2::rect::Rect;
 
 use crate::consts;
-use crate::models::{Colors, GetRectangle};
-use crate::models::Rectangle;
+use crate::models::colors::Colors;
+use crate::models::rectangle::{GetRectangle, Rectangle};
 
 #[derive(Debug, Clone)]
 pub struct Paddle {
@@ -27,18 +27,11 @@ impl Paddle {
         }
     }
 
-    // #[allow(dead_code)]
-    // pub fn new(shape: Rectangle) -> Paddle {
-    //     Paddle { shape }
-    // }
-
     pub fn mv(&mut self, delta_x: i32) {
         let new_x = self.shape.rect.x() + delta_x;
         let cap = consts::WIDTH - self.shape.rect.width();
         if new_x > cap as i32 {
-            self.shape.rect.x = cap
-                .try_into()
-                .unwrap();
+            self.shape.rect.x = cap.try_into().unwrap();
         } else if new_x < 0 {
             self.shape.rect.x = 0;
         } else {
