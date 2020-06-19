@@ -1,0 +1,13 @@
+rustout
+
+* Goal
+Recreate the classic game breakout
+
+* Notes
+
+* To do
+** DONE Set up SDL2
+** DONE Set up basic game loop
+** DONE Set up paddle input
+** DONE Ball physics
+** TODO Add blocks

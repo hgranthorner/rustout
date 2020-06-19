@@ -8,7 +8,7 @@ use sdl2::EventPump;
 
 use crate::consts;
 use crate::models::game::Game;
-use crate::models::rectangle::GetRectangle;
+use crate::models::rectangle::Renderable;
 
 pub fn run() {
     let sdl_context = sdl2::init().unwrap();
@@ -62,23 +62,14 @@ fn update_state(game: &mut Game) {
 
 fn render_game(canvas: &mut Canvas<Window>, game: &mut Game) {
     for block in &game.blocks {
-        draw_rectangle(canvas, block)
+        block.render(canvas);
     }
 
-    draw_rectangle(canvas, &game.ball);
-    draw_rectangle(canvas, &game.paddle);
+    game.ball.render(canvas);
+    game.paddle.render(canvas);
 
     canvas.present();
     std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     canvas.set_draw_color((0, 0, 0));
     canvas.clear();
-}
-
-fn draw_rectangle(canvas: &mut Canvas<Window>, rect: &impl GetRectangle) {
-    canvas.set_draw_color(rect.get_rectangle().color.to_rgb());
-    let result = canvas.fill_rect(rect.get_rectangle().rect);
-    match result {
-        Ok(_) => {}
-        Err(e) => panic!(e),
-    };
 }

@@ -1,19 +1,26 @@
+use sdl2::render::Canvas;
+use sdl2::video::Window;
 use std::convert::TryInto;
 
 use sdl2::rect::Rect;
 
 use crate::consts;
 use crate::models::colors::Colors;
-use crate::models::rectangle::{GetRectangle, Rectangle};
+use crate::models::rectangle::{Rectangle, Renderable};
 
 #[derive(Debug, Clone)]
 pub struct Paddle {
-    shape: Rectangle,
+    pub shape: Rectangle,
 }
 
-impl GetRectangle for Paddle {
-    fn get_rectangle(&self) -> &Rectangle {
-        &self.shape
+impl Renderable for Paddle {
+    fn render(&self, canvas: &mut Canvas<Window>) {
+        canvas.set_draw_color(self.shape.color.to_rgb());
+        let result = canvas.fill_rect(self.shape.rect);
+        match result {
+            Ok(_) => {}
+            Err(e) => panic!(e),
+        };
     }
 }
 
