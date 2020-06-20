@@ -6,6 +6,11 @@ use crate::models::colors::Colors;
 use crate::models::rectangle::{Rectangle, Renderable};
 use crate::utils::SafeSubtract;
 
+pub enum Destroyed {
+    IsDestroyed,
+    NotDestroyed,
+}
+
 #[derive(Debug, Clone)]
 pub struct Block {
     pub shape: Rectangle,
@@ -27,11 +32,11 @@ impl Block {
     pub fn new() -> Block {
         Block {
             health: 1,
-            shape: Rectangle::new(Rect::new(10, 10, 10, 10), Colors::BLUE),
+            shape: Rectangle::new(Rect::new(10, 10, 400, 10), Colors::BLUE),
         }
     }
 
-    pub fn hit(&mut self, damage: u8) {
+    pub fn hit(&mut self, damage: u8) -> Destroyed {
         match self.health.try_subtract(damage) {
             Ok(x) => {
                 self.health = x;
@@ -39,6 +44,12 @@ impl Block {
             Err(_) => {
                 self.health = 0;
             }
+        }
+
+        if self.health == 0 {
+            Destroyed::IsDestroyed
+        } else {
+            Destroyed::NotDestroyed
         }
     }
 }
@@ -50,17 +61,14 @@ mod tests {
     use super::*;
 
     impl Block {
-        pub fn test_new(shape: Rectangle, hits_left: u8) -> Block {
-            Block {
-                shape,
-                health: hits_left,
-            }
+        pub fn test_new(shape: Rectangle) -> Block {
+            Block { shape, health: 1 }
         }
     }
 
     impl Arbitrary for Block {
         fn arbitrary<G: Gen>(g: &mut G) -> Self {
-            Block::test_new(Rectangle::arbitrary(g), u8::arbitrary(g))
+            Block::test_new(Rectangle::arbitrary(g))
         }
     }
 

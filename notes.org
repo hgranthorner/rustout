@@ -4,6 +4,12 @@ rustout
 Recreate the classic game breakout
 
 * Notes
+** Ball
+   - trybounce
+   - takes a paddle and blocks, and returns what type of thing the ball bounced off
+   - first check if it hit a wall
+   - then check if it hit a block
+     - if so, hit the block and see if it is destroyed
 
 * To do
 ** DONE Set up SDL2
@@ -11,3 +17,4 @@ Recreate the classic game breakout
 ** DONE Set up paddle input
 ** DONE Ball physics
 ** TODO Add blocks
+** TODO Add tests for ball

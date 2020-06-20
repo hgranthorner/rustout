@@ -7,6 +7,7 @@ use sdl2::video::Window;
 use sdl2::EventPump;
 
 use crate::consts;
+use crate::models::block::Block;
 use crate::models::game::Game;
 use crate::models::rectangle::Renderable;
 
@@ -27,6 +28,7 @@ pub fn run() {
 
 fn game_loop(canvas: &mut Canvas<Window>, event_pump: &mut EventPump) {
     let mut game = Game::new();
+    game.blocks.push(Block::new());
     while game.running {
         handle_input(event_pump, &mut game);
         update_state(&mut game);
@@ -50,13 +52,22 @@ fn handle_input(event_pump: &mut EventPump, game: &mut Game) {
                 keycode: Some(Keycode::Right),
                 ..
             } => game.paddle.mv(10),
+            Event::KeyDown {
+                keycode: Some(Keycode::Up),
+                ..
+            } => {
+                // Only for debugging
+                game.ball.delta_x *= 2;
+                game.ball.delta_y *= 2;
+            }
+
             _ => {}
         }
     }
 }
 
 fn update_state(game: &mut Game) {
-    game.ball.try_bounce(&game.paddle);
+    game.ball.try_bounce(&game.paddle, &mut game.blocks);
     game.ball.mv();
 }
 
