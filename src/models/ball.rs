@@ -192,24 +192,24 @@ mod tests {
         }
     }
 
-    // #[quickcheck]
-    // fn removes_block(mut ball: Ball, mut vec: Vec<Block>, block: Block) -> bool {
-    //     if vec.is_empty() {
-    //         vec.push(block);
-    //     }
-    //     let paddle = Paddle::test_new(Rectangle::new(
-    //         Rect::new(i32::MAX, i32::MAX, 0, 0),
-    //         Colors::RED,
-    //     ));
-    //     let before_len = vec.len();
-    //     if let BouncedAgainst::DidBounce = ball.try_bounce(&paddle, &mut vec) {
-    //         println!("BouncedAgainst!");
-    //         println!("Before: {}. After: {}.", before_len, vec.len());
-    //         vec.len() == before_len - 1
-    //     } else {
-    //         println!("Did not Bounced.");
-    //         println!("Before: {}. After: {}.", before_len, vec.len());
-    //         vec.len() == before_len
-    //     }
-    // }
+    #[quickcheck]
+    fn removes_block(mut ball: Ball, mut vec: Vec<Block>, block: Block) -> bool {
+        if vec.is_empty() {
+            vec.push(block);
+        }
+        let paddle = Paddle::test_new(Rectangle::new(
+            Rect::new(i32::MAX, i32::MAX, 0, 0),
+            Colors::RED,
+        ));
+        let before_len = vec.len();
+        if let Some(BouncedAgainst::DestroyedBlock) = ball.try_bounce(&paddle, &mut vec) {
+            println!("Destroyed block!");
+            println!("Before: {}. After: {}.", before_len, vec.len());
+            vec.len() == before_len - 1
+        } else {
+            println!("Did not destroy block.");
+            println!("Before: {}. After: {}.", before_len, vec.len());
+            vec.len() == before_len
+        }
+    }
 }
