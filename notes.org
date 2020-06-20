@@ -5,7 +5,7 @@ Recreate the classic game breakout
 
 * Notes
 ** Ball
-   - trybounce
+*** trybounce
    - takes a paddle and blocks, and returns what type of thing the ball bounced off
    - first check if it hit a wall
    - then check if it hit a block
@@ -16,5 +16,8 @@ Recreate the classic game breakout
 ** DONE Set up basic game loop
 ** DONE Set up paddle input
 ** DONE Ball physics
-** TODO Add blocks
-** TODO Add tests for ball
+** DONE Add blocks
+** DONE Add tests for ball
+** TODO Add layers of blocks
+** TODO Add losing
+** TODO Add score

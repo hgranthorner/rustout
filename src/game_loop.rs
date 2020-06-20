@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
+use sdl2::keyboard::Scancode;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use sdl2::EventPump;
@@ -37,6 +38,18 @@ fn game_loop(canvas: &mut Canvas<Window>, event_pump: &mut EventPump) {
 }
 
 fn handle_input(event_pump: &mut EventPump, game: &mut Game) {
+    // Held keys need to be handled separately
+    if event_pump
+        .keyboard_state()
+        .is_scancode_pressed(Scancode::Right)
+    {
+        game.paddle.mv(10);
+    } else if event_pump
+        .keyboard_state()
+        .is_scancode_pressed(Scancode::Left)
+    {
+        game.paddle.mv(-10);
+    }
     for event in event_pump.poll_iter() {
         match event {
             Event::Quit { .. }
@@ -44,14 +57,6 @@ fn handle_input(event_pump: &mut EventPump, game: &mut Game) {
                 keycode: Some(Keycode::Escape),
                 ..
             } => game.stop_running(),
-            Event::KeyDown {
-                keycode: Some(Keycode::Left),
-                ..
-            } => game.paddle.mv(-10),
-            Event::KeyDown {
-                keycode: Some(Keycode::Right),
-                ..
-            } => game.paddle.mv(10),
             Event::KeyDown {
                 keycode: Some(Keycode::Up),
                 ..
