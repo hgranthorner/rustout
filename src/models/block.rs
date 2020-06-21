@@ -2,6 +2,7 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+use crate::consts;
 use crate::models::colors::Colors;
 use crate::models::rectangle::{Rectangle, Renderable};
 use crate::utils::SafeSubtract;
@@ -29,10 +30,10 @@ impl Renderable for Block {
 }
 
 impl Block {
-    pub fn new() -> Block {
+    pub fn new(x: i32) -> Block {
         Block {
             health: 1,
-            shape: Rectangle::new(Rect::new(10, 10, 400, 10), Colors::BLUE),
+            shape: Rectangle::new(Rect::new(x, 10, (consts::WIDTH / 14) - 5, 10), Colors::BLUE),
         }
     }
 

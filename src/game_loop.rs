@@ -8,7 +8,7 @@ use sdl2::video::Window;
 use sdl2::EventPump;
 
 use crate::consts;
-use crate::models::block::Block;
+use crate::models::colors::Colors;
 use crate::models::game::Game;
 use crate::models::rectangle::Renderable;
 
@@ -29,7 +29,6 @@ pub fn run() {
 
 fn game_loop(canvas: &mut Canvas<Window>, event_pump: &mut EventPump) {
     let mut game = Game::new();
-    game.blocks.push(Block::new());
     while game.running {
         handle_input(event_pump, &mut game);
         update_state(&mut game);
@@ -65,6 +64,13 @@ fn handle_input(event_pump: &mut EventPump, game: &mut Game) {
                 game.ball.delta_x *= 2;
                 game.ball.delta_y *= 2;
             }
+            Event::KeyDown {
+                keycode: Some(Keycode::Space),
+                ..
+            } => {
+                // Only for debugging
+                game.add_block_layer();
+            }
 
             _ => {}
         }
@@ -83,7 +89,11 @@ fn render_game(canvas: &mut Canvas<Window>, game: &mut Game) {
 
     game.ball.render(canvas);
     game.paddle.render(canvas);
-
+    canvas.set_draw_color(Colors::WHITE.to_rgb());
+    match canvas.fill_rects(&game.letters) {
+        Ok(_) => {}
+        Err(e) => panic!(e),
+    }
     canvas.present();
     std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     canvas.set_draw_color((0, 0, 0));
