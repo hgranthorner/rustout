@@ -8,6 +8,7 @@ use sdl2::video::Window;
 use sdl2::EventPump;
 
 use crate::consts;
+use crate::models::ball::BouncedAgainst;
 use crate::models::colors::Colors;
 use crate::models::game::Game;
 use crate::models::rectangle::Renderable;
@@ -78,7 +79,17 @@ fn handle_input(event_pump: &mut EventPump, game: &mut Game) {
 }
 
 fn update_state(game: &mut Game) {
-    game.ball.try_bounce(&game.paddle, &mut game.blocks);
+    match game.ball.try_bounce(&game.paddle, &mut game.blocks) {
+        Some(BouncedAgainst::DestroyedBlock) => game.increase_score(),
+        Some(BouncedAgainst::Floor) => game.lose_life(),
+        _ => {}
+    }
+
+    // if let Some(BouncedAgainst::DestroyedBlock) =
+    //     game.ball.try_bounce(&game.paddle, &mut game.blocks)
+    // {
+    //     game.increase_score();
+    // };
     game.ball.mv();
 }
 
@@ -94,6 +105,18 @@ fn render_game(canvas: &mut Canvas<Window>, game: &mut Game) {
         Ok(_) => {}
         Err(e) => panic!(e),
     }
+
+    match canvas.fill_rects(&game.display_score()) {
+        Ok(_) => {}
+        Err(e) => panic!(e),
+    }
+
+    canvas.set_draw_color(Colors::RED.to_rgb());
+    match canvas.fill_rects(&game.display_lives()) {
+        Ok(_) => {}
+        Err(e) => panic!(e),
+    }
+
     canvas.present();
     std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     canvas.set_draw_color((0, 0, 0));

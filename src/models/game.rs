@@ -9,8 +9,9 @@ pub struct Game {
     pub blocks: Vec<Block>,
     pub paddle: Paddle,
     pub ball: Ball,
-    pub score: u32,
     pub letters: Vec<Rect>,
+    score: u32,
+    lives: u8,
 }
 
 impl Game {
@@ -24,6 +25,7 @@ impl Game {
             ball,
             score: 0,
             letters: create_score_letters(),
+            lives: 3,
         }
     }
 
@@ -45,6 +47,27 @@ impl Game {
             })
             .collect();
         self.blocks.append(&mut new_blocks);
+    }
+    pub fn display_score(&self) -> Vec<Rect> {
+        fn f(x: i32) -> Rect {
+            Rect::new(x, consts::HEIGHT as i32 - 20, 4, 12)
+        }
+        if self.score > 0 {
+            (0..self.score).map(|x| f(60 + (x * 5) as i32)).collect()
+        } else {
+            Vec::new()
+        }
+    }
+    pub fn increase_score(&mut self) {
+        self.score += 1;
+    }
+    pub fn display_lives(&self) -> Vec<Rect> {
+        (0..self.lives).flat_map(|x| life_to_heart(x)).collect()
+    }
+    pub fn lose_life(&mut self) {
+        if self.lives > 0 {
+            self.lives -= 1;
+        }
     }
 }
 
@@ -130,6 +153,40 @@ fn create_score_letters() -> Vec<Rect> {
         // :
         f(55, 18),
         f(55, 10),
+    ]
+}
+
+fn life_to_heart(num: u8) -> Vec<Rect> {
+    let f = |x: i32, y: i32| {
+        Rect::new(
+            (consts::WIDTH as i32 - 50) + (num as i32 * 16) + x,
+            consts::HEIGHT as i32 - y,
+            2,
+            2,
+        )
+    };
+
+    vec![
+        f(0, 18),
+        f(0, 16),
+        f(2, 20),
+        f(2, 18),
+        f(2, 16),
+        f(2, 14),
+        f(2, 12),
+        f(4, 18),
+        f(4, 16),
+        f(4, 14),
+        f(4, 12),
+        f(4, 10),
+        f(4, 8),
+        f(6, 20),
+        f(6, 18),
+        f(6, 16),
+        f(6, 14),
+        f(6, 12),
+        f(8, 18),
+        f(8, 16),
     ]
 }
 

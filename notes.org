@@ -22,6 +22,6 @@ Recreate the classic game breakout
 ** DONE Ball physics
 ** DONE Add blocks
 ** DONE Add tests for ball*
-** TODO Add layers of blocks
-** TODO Add losing
-** TODO Add score
+** DONE Add layers of blocks
+** DONE Add losing
+** DONE Add score

@@ -16,6 +16,7 @@ pub enum Bounce {
 #[derive(PartialEq)]
 pub enum BouncedAgainst {
     WallOrPaddle,
+    Floor,
     Block,
     DestroyedBlock,
 }
@@ -140,11 +141,11 @@ impl Ball {
             {
                 Some((Bounce::Horizontal, BouncedAgainst::WallOrPaddle))
             }
-            (t, b, _, _)
-                if (t <= 0 && self.delta_y < 0)
-                    || (b >= consts::HEIGHT as i32 && self.delta_y > 0) =>
-            {
+            (t, _, _, _) if (t <= 0 && self.delta_y < 0) => {
                 Some((Bounce::Vertical, BouncedAgainst::WallOrPaddle))
+            }
+            (_, b, _, _) if (b >= consts::HEIGHT as i32 && self.delta_y > 0) => {
+                Some((Bounce::Vertical, BouncedAgainst::Floor))
             }
             (_, _, _, _) if paddle.shape.rect.has_intersection(self.shape.rect) => {
                 Some((Bounce::Vertical, BouncedAgainst::WallOrPaddle))
